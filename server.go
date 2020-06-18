@@ -29,10 +29,11 @@ func (r *Request) Dispatch(rd io.Reader, wr io.Writer, handlers map[string]Handl
 		return
 	}
 	r.Name = x.Body.Item.XMLName.Local
-	r.Arg = x.Unmarshal()
 	if h, ok := handlers[r.Name]; ok {
+		r.Arg = x.Unmarshal()
+		r.Ret = make(Values)
 		err = h(r)
-		if err != nil {
+		if err == nil {
 			x.Body.Item.XMLName.Local += r.Name + "Response"
 			x.Marshal(r.Ret)
 			err = xml.NewEncoder(wr).Encode(x)
@@ -41,7 +42,7 @@ func (r *Request) Dispatch(rd io.Reader, wr io.Writer, handlers map[string]Handl
 	return err
 }
 
-// Wrapper for Dispatch() to turn it into a generic http service.
+// Wrapper for Dispatch() to make a generic http service.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var req Request
 	err := req.Dispatch(r.Body, w, s.Handlers)

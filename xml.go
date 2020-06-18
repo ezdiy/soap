@@ -1,6 +1,8 @@
 package soap
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 type Values = map[string]string
 
@@ -16,8 +18,7 @@ type Envelope struct {
 		Body struct {
 		Item struct {
 			XMLName xml.Name
-			Content string `xml:",innerxml"`
-			Values []Value
+			Values []Value `xml:",any"`
 		} `xml:",any"`
 	}
 }
