@@ -11,9 +11,9 @@ type Value struct {
 }
 
 // The entire SOAP body, both request and response
-type Body struct {
+type Envelope struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
-	Body struct {
+		Body struct {
 		Item struct {
 			XMLName xml.Name
 			Content string `xml:",innerxml"`
@@ -23,7 +23,7 @@ type Body struct {
 }
 
 // Unmarshal the request/response into a map of values
-func (b *Body) Unmarshal() (ret Values) {
+func (b *Envelope) Unmarshal() (ret Values) {
 	ret = Values{}
 	for _, i := range b.Body.Item.Values {
 		ret[i.XMLName.Local] = i.Content
@@ -32,7 +32,7 @@ func (b *Body) Unmarshal() (ret Values) {
 }
 
 // Marshal map of values into a request/response
-func (b *Body) Marshal(values Values) {
+func (b *Envelope) Marshal(values Values) {
 	var vl []Value
 	for k, v := range values {
 		 vl = append(vl, Value{

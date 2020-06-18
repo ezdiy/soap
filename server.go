@@ -23,7 +23,7 @@ type Server struct {
 
 // Perform a single request/response round trip via provided map of handlers.
 func (r *Request) Dispatch(rd io.Reader, wr io.Writer, handlers map[string]Handler) (err error) {
-	x := &Body{}
+	x := &Envelope{}
 	err = xml.NewDecoder(rd).Decode(&x)
 	if err != nil {
 		return
