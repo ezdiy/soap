@@ -15,10 +15,10 @@ type Value struct {
 // The entire SOAP body, both request and response
 type Envelope struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
-		Body struct {
+	Body    struct {
 		Item struct {
 			XMLName xml.Name
-			Values []Value `xml:",any"`
+			Values  []Value `xml:",any"`
 		} `xml:",any"`
 	}
 }
@@ -36,12 +36,12 @@ func (b *Envelope) Unmarshal() (ret Values) {
 func (b *Envelope) Marshal(values Values) {
 	var vl []Value
 	for k, v := range values {
-		 vl = append(vl, Value{
-		 	XMLName: xml.Name{
-		 		Local: k,
+		vl = append(vl, Value{
+			XMLName: xml.Name{
+				Local: k,
 			},
 			Content: v,
-		 })
+		})
 	}
 	b.Body.Item.Values = vl
 }

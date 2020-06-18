@@ -1,3 +1,4 @@
+// Implements simple boilerplate for SOAP servers and clients.
 package soap
 
 import (
@@ -6,6 +7,7 @@ import (
 	"net/http"
 )
 
+// Single handler for an RPC call
 type Handler func(r *Request) error
 
 // Represents whole RPC state lifetime of each request
@@ -51,5 +53,3 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-

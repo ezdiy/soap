@@ -9,16 +9,16 @@ import (
 )
 
 type Client struct {
-	*http.Client
-	URL string
-	Schema string
+	*http.Client        // The underlying http client we'll use for requests
+	URL          string // RPC endpoint
+	Schema       string // The SOAP schema to advertise
 }
 
 // Create new RPC client
 func NewClient(url, schema string) *Client {
 	return &Client{
 		Client: &http.Client{},
-		URL: url,
+		URL:    url,
 		Schema: schema,
 	}
 }
@@ -40,7 +40,7 @@ func (c *Client) Encode(name string, args Values) (rd io.Reader, err error) {
 	return bytes.NewReader(append([]byte(header), b...)), nil
 }
 
-// Decode a soap response from XML body
+// Decode a SOAP response from XML body
 func (c *Client) Decode(r io.Reader) (v Values, err error) {
 	x := &Envelope{}
 	err = xml.NewDecoder(r).Decode(x)
@@ -60,8 +60,8 @@ func (c *Client) Call(name string, args Values) (Values, error) {
 	if err != nil {
 		return nil, err
 	}
-	r.Header["SOAPACTION"] = []string{"\""+c.Schema + "#" + name + "\""}
-	r.Header.Set("Content-Type","text/xml; charset=\"utf-8\"")
+	r.Header["SOAPACTION"] = []string{"\"" + c.Schema + "#" + name + "\""}
+	r.Header.Set("Content-Type", "text/xml; charset=\"utf-8\"")
 	resp, err := c.Do(r)
 	if err != nil {
 		return nil, err

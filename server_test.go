@@ -17,7 +17,7 @@ func TestServer_ServeHTTP(t *testing.T) {
 	go http.ListenAndServe("127.0.0.1:19000", s)
 	time.Sleep(100 * time.Millisecond)
 	c := NewClient("http://127.0.0.1:19000", "")
-	got, _ := c.Call("TestRPCCall", Values{"Arg":"testarg"})
+	got, _ := c.Call("TestRPCCall", Values{"Arg": "testarg"})
 	if got["Ret"] != "testarg123" {
 		t.Fatal("failed round trip")
 	}
